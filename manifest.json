@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Font Detector",
+  "version": "1.0",
+  "description": "Shows the font of text you hover over in a tooltip",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Font Detector"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["clipboard.js", "fontDetector.js", "tooltip.js", "content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
