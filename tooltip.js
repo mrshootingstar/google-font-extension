@@ -117,6 +117,11 @@ const Tooltip = (() => {
     contentElement.innerHTML = content;
     currentFontName = fontName;
     currentAllSpecs = allSpecs;
+
+    // Reset hint to default state
+    hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Q</kbd> disable</span>';
+    tooltipElement.classList.remove('copied', 'disabled');
+
     tooltipElement.classList.add('visible');
     tooltipElement.setAttribute('aria-hidden', 'false');
 
