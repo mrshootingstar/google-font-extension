@@ -32,7 +32,7 @@ const Tooltip = (() => {
 
     hintElement = document.createElement('div');
     hintElement.className = 'fd-hint';
-    hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Esc</kbd> disable</span>';
+    hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Q</kbd> disable</span>';
 
     tooltipElement.appendChild(contentElement);
     tooltipElement.appendChild(hintElement);
@@ -52,7 +52,7 @@ const Tooltip = (() => {
     tooltipElement.classList.add('copied');
 
     setTimeout(() => {
-      hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Esc</kbd> disable</span>';
+      hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Q</kbd> disable</span>';
       tooltipElement.classList.remove('copied');
     }, 1500);
   }

@@ -81,8 +81,13 @@
 
     const key = event.key;
 
-    // Handle Escape key to disable extension (works anywhere)
-    if (key === 'Escape') {
+    // Handle 'Q' key to disable extension
+    if (key.toLowerCase() === 'q' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      // Don't intercept if typing in input fields
+      const target = event.target;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
       disable();
       saveState(false);
       return;

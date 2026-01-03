@@ -28,7 +28,7 @@ A Chrome extension that displays font information for any text you hover over on
 |-----|--------|
 | `C` | Copy font name |
 | `A` | Copy all specifications |
-| `Esc` | Disable extension |
+| `Q` | Disable extension |
 
 ## Project Structure
 
