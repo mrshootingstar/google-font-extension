@@ -49,6 +49,26 @@ const FontDetector = (() => {
   }
 
   /**
+   * Formats font properties into plain text for copying
+   * @param {Object} properties - Font properties object
+   * @returns {string} Plain text font information
+   */
+  function formatFontInfoPlain(properties) {
+    const fontName = cleanFontFamily(properties.fontFamily);
+    const lines = [
+      `Font: ${fontName}`,
+      `Size: ${properties.fontSize}`,
+      `Weight: ${formatWeight(properties.fontWeight)}`,
+      `Style: ${properties.fontStyle}`,
+      `Line Height: ${properties.lineHeight}`,
+      `Letter Spacing: ${properties.letterSpacing}`,
+      `Color: ${properties.color}`
+    ];
+
+    return lines.join('\n');
+  }
+
+  /**
    * Formats color value with a visual swatch
    * @param {string} color - RGB color string
    * @returns {string} HTML with color swatch and value
@@ -120,6 +140,7 @@ const FontDetector = (() => {
   return {
     getFontProperties,
     formatFontInfo,
+    formatFontInfoPlain,
     hasTextContent,
     cleanFontFamily
   };

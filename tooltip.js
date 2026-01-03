@@ -11,6 +11,7 @@ const Tooltip = (() => {
   let contentElement = null;
   let hintElement = null;
   let currentFontName = '';
+  let currentAllSpecs = '';
 
   /**
    * Creates the tooltip element if it doesn't exist
@@ -31,7 +32,7 @@ const Tooltip = (() => {
 
     hintElement = document.createElement('div');
     hintElement.className = 'fd-hint';
-    hintElement.innerHTML = 'Press <kbd>C</kbd> to copy';
+    hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Esc</kbd> disable</span>';
 
     tooltipElement.appendChild(contentElement);
     tooltipElement.appendChild(hintElement);
@@ -51,7 +52,7 @@ const Tooltip = (() => {
     tooltipElement.classList.add('copied');
 
     setTimeout(() => {
-      hintElement.innerHTML = 'Press <kbd>C</kbd> to copy';
+      hintElement.innerHTML = '<span class="fd-hint-item"><kbd>C</kbd> copy font</span><span class="fd-hint-item"><kbd>A</kbd> copy all</span><span class="fd-hint-item"><kbd>Esc</kbd> disable</span>';
       tooltipElement.classList.remove('copied');
     }, 1500);
   }
@@ -65,6 +66,14 @@ const Tooltip = (() => {
   }
 
   /**
+   * Gets all current font specifications
+   * @returns {string} All font specs as plain text
+   */
+  function getAllSpecs() {
+    return currentAllSpecs;
+  }
+
+  /**
    * Checks if tooltip is currently visible
    * @returns {boolean}
    */
@@ -74,18 +83,20 @@ const Tooltip = (() => {
 
   /**
    * Shows the tooltip with the given content
-   * @param {string} content - Text content to display
+   * @param {string} content - HTML content to display
    * @param {string} fontName - The font name for copying
+   * @param {string} allSpecs - All specifications as plain text
    * @param {number} x - X coordinate for positioning
    * @param {number} y - Y coordinate for positioning
    */
-  function show(content, fontName, x, y) {
+  function show(content, fontName, allSpecs, x, y) {
     if (!tooltipElement) {
       create();
     }
 
     contentElement.innerHTML = content;
     currentFontName = fontName;
+    currentAllSpecs = allSpecs;
     tooltipElement.classList.add('visible');
     tooltipElement.setAttribute('aria-hidden', 'false');
 
@@ -165,6 +176,7 @@ const Tooltip = (() => {
     destroy,
     showCopyFeedback,
     getCurrentFontName,
+    getAllSpecs,
     isVisible
   };
 })();

@@ -29,6 +29,18 @@
       }).catch(() => {
         // Storage not available, keep default (enabled)
       });
+
+      // Listen for storage changes from popup or other tabs
+      chrome.storage.onChanged.addListener((changes, namespace) => {
+        if (namespace === 'local' && changes.isEnabled !== undefined) {
+          const newValue = changes.isEnabled.newValue;
+          if (newValue) {
+            enable();
+          } else {
+            disable();
+          }
+        }
+      });
     }
   }
 
@@ -60,28 +72,66 @@
   }
 
   /**
-   * Handles keydown events for copy functionality
+   * Handles keydown events for copy and disable functionality
    * @param {KeyboardEvent} event
    */
   async function handleKeyDown(event) {
-    // Only respond to 'C' key (without modifiers) when tooltip is visible
-    if (event.key.toLowerCase() !== 'c') return;
-    if (event.ctrlKey || event.metaKey || event.altKey) return;
-    if (!Tooltip.isVisible()) return;
+    // Don't intercept if extension is disabled or tooltip not showing
+    if (!isEnabled) return;
 
-    const fontName = Tooltip.getCurrentFontName();
-    if (!fontName) return;
+    const key = event.key;
 
-    // Prevent 'c' from being typed in input fields
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) {
+    // Handle Escape key to disable extension (works anywhere)
+    if (key === 'Escape') {
+      disable();
+      saveState(false);
       return;
     }
 
-    event.preventDefault();
+    // For other shortcuts, tooltip must be visible
+    if (!Tooltip.isVisible()) return;
 
-    const success = await Clipboard.copy(fontName);
-    if (success) {
-      Tooltip.showCopyFeedback();
+    // Don't intercept typing in input fields
+    const target = event.target;
+    const isInputField = target.tagName === 'INPUT' ||
+                         target.tagName === 'TEXTAREA' ||
+                         target.isContentEditable;
+    if (isInputField) return;
+
+    // Handle 'C' key to copy font name
+    if (key.toLowerCase() === 'c' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const fontName = Tooltip.getCurrentFontName();
+      if (fontName) {
+        const success = await Clipboard.copy(fontName);
+        if (success) Tooltip.showCopyFeedback();
+      }
+      return;
+    }
+
+    // Handle 'A' key to copy all specs
+    if (key.toLowerCase() === 'a' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const allSpecs = Tooltip.getAllSpecs();
+      if (allSpecs) {
+        const success = await Clipboard.copy(allSpecs);
+        if (success) Tooltip.showCopyFeedback();
+      }
+      return;
+    }
+  }
+
+  /**
+   * Saves the enabled state to chrome storage
+   * @param {boolean} enabled
+   */
+  function saveState(enabled) {
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ isEnabled: enabled });
     }
   }
 
@@ -109,8 +159,9 @@
     const fontProperties = FontDetector.getFontProperties(target);
     const fontInfo = FontDetector.formatFontInfo(fontProperties);
     const fontName = FontDetector.cleanFontFamily(fontProperties.fontFamily);
+    const allSpecs = FontDetector.formatFontInfoPlain(fontProperties);
 
-    Tooltip.show(fontInfo, fontName, event.clientX, event.clientY);
+    Tooltip.show(fontInfo, fontName, allSpecs, event.clientX, event.clientY);
   }
 
   /**

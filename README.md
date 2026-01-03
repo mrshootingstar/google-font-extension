@@ -22,7 +22,13 @@ A Chrome extension that displays font information for any text you hover over on
 
 1. Click the extension icon in Chrome toolbar to toggle on/off
 2. Hover over any text on a webpage to see font details
-3. Press `C` to copy the font name to clipboard
+
+**Keyboard shortcuts** (while tooltip is visible):
+| Key | Action |
+|-----|--------|
+| `C` | Copy font name |
+| `A` | Copy all specifications |
+| `Esc` | Disable extension |
 
 ## Project Structure
 
