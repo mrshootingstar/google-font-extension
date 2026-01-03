@@ -76,35 +76,23 @@
    * @param {KeyboardEvent} event
    */
   async function handleKeyDown(event) {
-    // Don't intercept if extension is disabled or tooltip not showing
+    // All shortcuts require: extension enabled, tooltip visible, not in input field
     if (!isEnabled) return;
-
-    const key = event.key;
-
-    // Handle 'Q' key to disable extension
-    if (key.toLowerCase() === 'q' && !event.ctrlKey && !event.metaKey && !event.altKey) {
-      // Don't intercept if typing in input fields
-      const target = event.target;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-        return;
-      }
-      disable();
-      saveState(false);
-      return;
-    }
-
-    // For other shortcuts, tooltip must be visible
     if (!Tooltip.isVisible()) return;
 
-    // Don't intercept typing in input fields
     const target = event.target;
     const isInputField = target.tagName === 'INPUT' ||
                          target.tagName === 'TEXTAREA' ||
                          target.isContentEditable;
     if (isInputField) return;
 
+    const key = event.key.toLowerCase();
+    const hasModifier = event.ctrlKey || event.metaKey || event.altKey;
+
+    if (hasModifier) return;
+
     // Handle 'C' key to copy font name
-    if (key.toLowerCase() === 'c' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    if (key === 'c') {
       event.preventDefault();
       event.stopPropagation();
 
@@ -117,7 +105,7 @@
     }
 
     // Handle 'A' key to copy all specs
-    if (key.toLowerCase() === 'a' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    if (key === 'a') {
       event.preventDefault();
       event.stopPropagation();
 
@@ -126,6 +114,18 @@
         const success = await Clipboard.copy(allSpecs);
         if (success) Tooltip.showCopyFeedback();
       }
+      return;
+    }
+
+    // Handle 'Q' key to disable extension
+    if (key === 'q') {
+      event.preventDefault();
+      event.stopPropagation();
+
+      Tooltip.showDisabledFeedback(() => {
+        disable();
+        saveState(false);
+      });
       return;
     }
   }

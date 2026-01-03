@@ -58,6 +58,26 @@ const Tooltip = (() => {
   }
 
   /**
+   * Shows visual feedback when extension is disabled
+   * @param {Function} callback - Called after feedback is shown
+   */
+  function showDisabledFeedback(callback) {
+    if (!hintElement || !tooltipElement) {
+      if (callback) callback();
+      return;
+    }
+
+    hintElement.innerHTML = '<span class="fd-disabled-text">Disabled</span>';
+    tooltipElement.classList.add('disabled');
+
+    setTimeout(() => {
+      tooltipElement.classList.remove('disabled');
+      hide();
+      if (callback) callback();
+    }, 1200);
+  }
+
+  /**
    * Gets the current font name
    * @returns {string} Current font name
    */
@@ -175,6 +195,7 @@ const Tooltip = (() => {
     updatePosition,
     destroy,
     showCopyFeedback,
+    showDisabledFeedback,
     getCurrentFontName,
     getAllSpecs,
     isVisible

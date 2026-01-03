@@ -142,3 +142,15 @@
   font-weight: 600;
   letter-spacing: 0.5px;
 }
+
+/* Disabled State */
+#font-detector-tooltip.disabled .fd-hint {
+  background: rgba(243, 139, 168, 0.15);
+  border-top-color: rgba(243, 139, 168, 0.3);
+}
+
+#font-detector-tooltip .fd-disabled-text {
+  color: #f38ba8;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
